@@ -1,0 +1,14 @@
+[Container]
+Image=lscr.io/linuxserver/radarr:latest
+ContainerName=radarr
+Environment=PUID=0 PGID=0 TZ=Etc/UTC
+PublishPort=7878:7878
+Volume=/var/srv/radarr:/config:Z
+Volume=/var/iron/Media:/mnt/iron/Media:z
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

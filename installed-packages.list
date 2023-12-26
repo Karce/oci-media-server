@@ -1,0 +1,6 @@
+podman-compose
+podlet -- Used for generating quadlet systemd container unit files for autostarting/updating podman containers
+samba
+modified selinux w/ "sudo setsebool -P samba_export_all_rw 1"
+./podlet --install -u compose -- With the docker-compose.yml file
+modprobe wireguard -> /etc/module-loads.d/wireguard.conf

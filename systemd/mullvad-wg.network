@@ -1,0 +1,7 @@
+# mullvad-wg.network
+[Network]
+Driver=bridge
+
+[Install]
+WantedBy=default.target
+

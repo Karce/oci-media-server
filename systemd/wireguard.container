@@ -1,0 +1,21 @@
+
+# wireguard.container
+[Container]
+Image=lscr.io/linuxserver/wireguard:latest
+AddCapability=NET_ADMIN SYS_MODULE
+ContainerName=wireguard
+Environment=PUID=0 PGID=0 TZ=Etc/UTC LOG_CONFS=true
+Network=mullvad-wg.network
+PublishPort=51820:51820/udp
+PublishPort=8080:8080
+PublishPort=6881:6881
+PublishPort=6881:6881/udp
+Volume=/var/srv/mullvad:/config:Z
+PodmanArgs=--sysctl "net.ipv4.conf.all.src_valid_mark=1"
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

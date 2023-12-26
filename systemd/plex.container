@@ -1,0 +1,15 @@
+[Container]
+Image=lscr.io/linuxserver/plex:latest
+ContainerName=plex
+Environment=PUID=0 PGID=0 TZ=Etc/UTC VERSION=latest PLEX_CLAIM=
+#PublishPort=32400:32400
+Network=host
+Volume=/var/srv/plex:/config:Z
+Volume=/var/iron/Media:/mnt/iron/Media:z
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

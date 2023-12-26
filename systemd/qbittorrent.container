@@ -1,0 +1,18 @@
+# qbittorrent.container
+[Container]
+Image=lscr.io/linuxserver/qbittorrent:latest
+ContainerName=qbittorrent
+Environment=PUID=0 PGID=0 TZ=Etc/UTC WEBUI_PORT=8080
+PublishPort=8080:8080
+PublishPort=6881:6881
+PublishPort=6881:6881/udp
+Network=container:wireguard
+Volume=/var/srv/qbittorrent:/config:Z
+Volume=/var/iron/Media:/mnt/iron/Media:z
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

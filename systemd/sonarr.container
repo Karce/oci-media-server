@@ -1,0 +1,14 @@
+[Container]
+Image=lscr.io/linuxserver/sonarr:latest
+ContainerName=sonarr
+Environment=PUID=0 PGID=0 TZ=Etc/UTC
+PublishPort=8989:8989
+Volume=/var/srv/sonarr:/config:Z
+Volume=/var/iron/Media:/mnt/iron/Media:z
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

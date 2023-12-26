@@ -1,0 +1,100 @@
+---
+version: "2.1"
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+    volumes:
+      - /var/srv/sonarr:/config:Z
+      - /var/iron/Media:/mnt/iron/Media:z #optional
+    ports:
+      - 8989:8989
+    restart: always
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+    volumes:
+      - /var/srv/radarr:/config:Z
+      - /var/iron/Media:/mnt/iron/Media:z #optional
+    ports:
+      - 7878:7878
+    restart: always
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+    volumes:
+      - /var/srv/prowlarr:/config:Z
+    ports:
+      - 9696:9696
+    restart: always
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+      - VERSION=latest
+      - PLEX_CLAIM= #optional
+    volumes:
+      - /var/srv/plex:/config:Z
+      - /var/iron/Media:/mnt/iron/Media:z #optional
+    ports:
+      - 32400:32400
+    restart: always
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: container:wireguard
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+    volumes:
+      - /var/srv/qbittorrent:/config:Z
+      - /var/iron/Media:/mnt/iron/Media:z #optional
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: always
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    networks:
+      - mullvad-wg
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/UTC
+      - LOG_CONFS=true #optional
+    volumes:
+      - /var/srv/mullvad:/config:Z
+    ports:
+      - 51820:51820/udp
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: always
+
+networks:
+  mullvad-wg:
+    driver: bridge

@@ -1,0 +1,61 @@
+From reddit https://www.reddit.com/r/selfhosted/comments/z0cfg3/wireguard_with_multiple_dockercompose_files/
+
+-----------------------------------------------
+
+Is your WireGuard container in client mode connected to a WireGuard server?
+
+This is my docker-compose.yml for a wireguard client connected to a wireguard server. I've also created a network in the same file and exposed some ports to services with a web UI which I want to access from my LAN.
+
+version: "2.1"
+services:
+  wireguard_vpn:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard_vpn
+    networks:
+      - wireguard-vpn
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - LOG_CONFS=true #optional
+    volumes:
+      - ./config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      # - 52000:51820/udp
+      - 8586:8586/tcp         # qbitorrent
+      - 9999:9696/tcp         # prowlarr
+      - 9998:8989/tcp         # sonarr
+      - 7878:7878             # radarr
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: always
+
+networks:
+  wireguard-vpn:
+    name: wireguard-vpn
+    driver: bridge
+
+Here is an example of another service in a separate docker-compose file which is connected to the wireguard network.
+
+services:
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: container:wireguard_vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - WEBUI_PORT=8586
+    volumes:
+      - ./qbittorrent-config:/config
+      - ${DOWNLOADS_DIR}:/downloads
+    restart: always
+

@@ -1,0 +1,13 @@
+[Container]
+Image=lscr.io/linuxserver/prowlarr:latest
+ContainerName=prowlarr
+Environment=PUID=0 PGID=0 TZ=Etc/UTC
+PublishPort=9696:9696
+Volume=/var/srv/prowlarr:/config:Z
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
